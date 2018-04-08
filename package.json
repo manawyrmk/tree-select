@@ -1,5 +1,5 @@
 {
-  "name": "rc-tree-select",
+  "name": "@native-ads/rc-tree-select",
   "version": "1.12.9",
   "description": "tree-select ui component for react",
   "keywords": [
@@ -8,6 +8,9 @@
     "react-tree-select",
     "tree-select"
   ],
+  "publishConfig": {
+    "registry": "http://pnpm.baidu.com"
+  },
   "homepage": "https://github.com/react-component/tree-select",
   "author": "hualei5280@gmail.com",
   "repository": {
