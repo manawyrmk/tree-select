@@ -87,6 +87,8 @@ export const SelectPropTypes = {
   showCheckedStrategy: PropTypes.oneOf([
     SHOW_ALL, SHOW_PARENT, SHOW_CHILD,
   ]),
+  showCheckedSimplify: PropTypes.bool,
+  checkedSimplifyTitle: PropTypes.string,
   treeCheckStrictly: PropTypes.bool,
   treeIcon: PropTypes.bool,
   treeLine: PropTypes.bool,

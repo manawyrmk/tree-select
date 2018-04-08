@@ -80,6 +80,8 @@ class Select extends Component {
     onDropdownVisibleChange: () => { return true; },
     notFoundContent: 'Not Found',
     showCheckedStrategy: SHOW_CHILD,
+    showCheckedSimplify: false,
+    checkedSimplifyTitle: '已选择多项',
     // skipHandleInitValue: false, // Deprecated (use treeCheckStrictly)
     treeCheckStrictly: false,
     treeIcon: false,
@@ -768,7 +770,12 @@ class Select extends Component {
               label: labs && labs[i],
             };
           })),
-        }, this.forcePopupAlign);
+        },
+            () => {
+              this.forcePopupAlign();
+            }
+
+        );
       }
     }
   }
@@ -829,29 +836,49 @@ class Select extends Component {
       </span>);
     }
 
-    const selectedValueNodes = value.map((singleValue) => {
-      let content = singleValue.label;
-      const title = content;
-      if (maxTagTextLength && typeof content === 'string' && content.length > maxTagTextLength) {
-        content = `${content.slice(0, maxTagTextLength)}...`;
-      }
-      return (
-        <li
+    let selectedValueNodes = [];
+    if (props.showCheckedSimplify) {
+      // 是简化风格 不显示选中的具体信息 只显示个数
+      if (value.length) {
+        const content = `${props.checkedSimplifyTitle} (${value.length})`;
+        selectedValueNodes = [<li
           style={UNSELECTABLE_STYLE}
           {...UNSELECTABLE_ATTRIBUTE}
           onMouseDown={preventDefaultEvent}
           className={`${prefixCls}-selection__choice`}
-          key={singleValue.value}
-          title={title}
+          key={'simplifyInfomation'}
         >
-          <span
-            className={`${prefixCls}-selection__choice__remove`}
-            onClick={this.removeSelected.bind(this, singleValue.value)}
-          />
-          <span className={`${prefixCls}-selection__choice__content`}>{content}</span>
-        </li>
-      );
-    });
+          <span className={`${prefixCls}-selection__choice__content`}>
+            {content}
+          </span>
+        </li>];
+      }
+    } else {
+      // 非简化风格 显示选中项信息
+      selectedValueNodes = value.map((singleValue) => {
+        let content = singleValue.label;
+        const title = content;
+        if (maxTagTextLength && typeof content === 'string' && content.length > maxTagTextLength) {
+          content = `${content.slice(0, maxTagTextLength)}...`;
+        }
+        return (
+          <li
+            style={UNSELECTABLE_STYLE}
+            {...UNSELECTABLE_ATTRIBUTE}
+            onMouseDown={preventDefaultEvent}
+            className={`${prefixCls}-selection__choice`}
+            key={singleValue.value}
+            title={title}
+          >
+            <span
+              className={`${prefixCls}-selection__choice__remove`}
+              onClick={this.removeSelected.bind(this, singleValue.value)}
+            />
+            <span className={`${prefixCls}-selection__choice__content`}>{content}</span>
+          </li>
+          );
+      });
+    }
 
     selectedValueNodes.push(<li
       className={`${prefixCls}-search ${prefixCls}-search--inline`}
